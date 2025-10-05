@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PassportCashGrab - Прикрепи паспорт, получи деньги!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        .passport-frame {
+            border: 2px dashed #ccc;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.3s ease;
+        }
+        .passport-frame:hover {
+            border-color: #4f46e5;
+            transform: scale(1.02);
+        }
+        #passportPreview {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-purple-600 to-blue-500 p-6 text-white">
+                <h1 class="text-3xl font-bold text-center">
+                    <i data-feather="credit-card" class="inline mr-2"></i> PassportCashGrab
+                </h1>
+                <p class="text-center text-purple-100 mt-2">Прикрепи паспорт - получи деньги мгновенно!</p>
+            </div>
+
+            <div class="p-6">
+                <div class="mb-8 text-center">
+                    <h2 class="text-xl font-semibold text-gray-800">Загрузите фото паспорта</h2>
+                    <p class="text-gray-600 mt-2">Мы гарантируем конфиденциальность ваших данных</p>
+                </div>
+
+                <form id="passportForm" class="space-y-6">
+                    <div class="flex flex-col items-center">
+                        <div id="passportDropzone" class="passport-frame w-64 h-40 rounded-lg cursor-pointer flex items-center justify-center mb-4">
+                            <div id="uploadPrompt" class="text-center p-4">
+                                <i data-feather="upload" class="mx-auto text-gray-400 w-10 h-10"></i>
+                                <p class="mt-2 text-sm text-gray-500">Нажмите или перетащите фото паспорта</p>
+                            </div>
+                            <img id="passportPreview" alt="Предпросмотр паспорта" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <input type="file" id="passportInput" accept="image/*" class="hidden" required>
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Ваш email</label>
+                        <input type="email" id="email" value="ela061758@gmail.com" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+                    </div>
+
+                    <div>
+                        <label for="amount" class="block text-sm font-medium text-gray-700">Сумма к получению</label>
+                        <select id="amount" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
+                            <option>5000 руб</option>
+                            <option>10000 руб</option>
+                            <option>15000 руб</option>
+                            <option>20000 руб</option>
+                            <option>50000 руб</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input id="agreeTerms" name="agreeTerms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" required>
+                        <label for="agreeTerms" class="ml-2 block text-sm text-gray-700">Я согласен с условиями передачи данных</label>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Получить деньги <i data-feather="dollar-sign" class="ml-2"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="mt-8 border-t border-gray-200 pt-6">
+                    <h3 class="text-sm font-medium text-gray-900">Как это работает?</h3>
+                    <div class="mt-4 grid grid-cols-3 gap-4">
+                        <div class="text-center">
+                            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100">
+                                <i data-feather="upload" class="text-indigo-600"></i>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">Загрузите фото</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100">
+                                <i data-feather="mail" class="text-indigo-600"></i>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">Подтвердите email</p>
+                        </div>
+                        <div class="text-center">
+                            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100">
+                                <i data-feather="dollar-sign" class="text-indigo-600"></i>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500">Получите деньги</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+            
+            const dropzone = document.getElementById('passportDropzone');
+            const fileInput = document.getElementById('passportInput');
+            const preview = document.getElementById('passportPreview');
+            const uploadPrompt = document.getElementById('uploadPrompt');
+            
+            // Handle click on dropzone
+            dropzone.addEventListener('click', () => fileInput.click());
+            
+            // Handle drag and drop
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropzone.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropzone.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropzone.classList.add('border-indigo-500');
+            }
+            
+            function unhighlight() {
+                dropzone.classList.remove('border-indigo-500');
+            }
+            
+            // Handle file drop
+            dropzone.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+            
+            // Handle file selection
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+            
+            function handleFiles(files) {
+                if (files && files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                        uploadPrompt.style.display = 'none';
+                    }
+                    
+                    reader.readAsDataURL(files[0]);
+                }
+            }
+            
+            // Form submission
+            document.getElementById('passportForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Here would be the actual form submission to the server
+                // For demo purposes, we'll just show an alert
+                
+                const email = document.getElementById('email').value;
+                const amount = document.getElementById('amount').value;
+                
+                alert(`Ваш паспорт отправлен на ${email}. Ожидайте перевод ${amount} в течение 24 часов.`);
+                
+                // Reset form
+                this.reset();
+                preview.style.display = 'none';
+                uploadPrompt.style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
